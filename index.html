@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamTime — Enkel tidrapportering för alla branscher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0e0e0e;
+  --white: #f8f7f4;
+  --accent: #ff5c2b;
+  --accent2: #ff8a5c;
+  --green: #1a5c2a;
+  --muted: #888;
+  --border: #e0ddd8;
+  --card: #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 40px;
+  background: rgba(248,247,244,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 24px;
+  letter-spacing: -0.5px;
+  color: var(--black);
+  text-decoration: none;
+}
+.logo span { color: var(--accent); }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  font-size: 14px; font-weight: 500;
+  color: var(--muted); text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--black); }
+.nav-cta {
+  background: var(--black); color: var(--white) !important;
+  padding: 10px 20px; border-radius: 8px;
+  font-weight: 600 !important; font-size: 14px !important;
+  transition: background 0.2s !important;
+}
+.nav-cta:hover { background: var(--accent) !important; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 40px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse 80% 60% at 70% 50%, #fff0eb 0%, transparent 70%),
+              radial-gradient(ellipse 40% 40% at 20% 80%, #e8f5ec 0%, transparent 60%);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.hero-content {
+  position: relative; z-index: 1;
+  max-width: 680px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #fff; border: 1px solid var(--border);
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+.hero-badge .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+
+h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(42px, 6vw, 76px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  color: var(--black);
+  margin-bottom: 24px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+h1 .accent { color: var(--accent); }
+h1 .block { display: block; }
+
+.hero-sub {
+  font-size: 18px; font-weight: 300; color: #555;
+  line-height: 1.6; margin-bottom: 40px; max-width: 520px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+.btn-primary {
+  background: var(--accent); color: #fff;
+  padding: 16px 32px; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: transform 0.15s, background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(255,92,43,0.35);
+  display: inline-block;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,92,43,0.4); }
+.btn-secondary {
+  background: transparent; color: var(--black);
+  padding: 16px 32px; border-radius: 10px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px;
+  text-decoration: none; border: 2px solid var(--border); cursor: pointer;
+  transition: border-color 0.2s;
+  display: inline-block;
+}
+.btn-secondary:hover { border-color: var(--black); }
+
+.hero-stats {
+  display: flex; gap: 40px; margin-top: 60px;
+  animation: fadeUp 0.6s 0.4s ease both;
+  flex-wrap: wrap;
+}
+.stat { }
+.stat-num {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 32px;
+  color: var(--black); letter-spacing: -1px;
+}
+.stat-label { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+/* floating phone mockup */
+.hero-visual {
+  position: absolute; right: 6%; top: 50%; transform: translateY(-50%);
+  z-index: 1;
+  animation: floatIn 0.8s 0.3s ease both;
+  display: none;
+}
+@media(min-width:1000px){ .hero-visual { display: block; } }
+.phone-mock {
+  width: 260px;
+  background: #111;
+  border-radius: 36px;
+  padding: 16px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+  transform: rotate(4deg);
+}
+.phone-screen {
+  background: #f8f7f4;
+  border-radius: 24px;
+  padding: 20px 16px;
+  min-height: 460px;
+  overflow: hidden;
+}
+.phone-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+}
+.phone-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:16px; }
+.phone-logo span { color: var(--accent); }
+.phone-card {
+  background: #fff; border-radius: 14px; padding: 14px; margin-bottom: 10px;
+  border: 1px solid #eee;
+}
+.phone-card-label { font-size: 9px; font-weight: 700; text-transform: uppercase; color: #aaa; letter-spacing: 1px; margin-bottom: 6px; }
+.phone-clock { font-family:'Syne',sans-serif; font-weight:800; font-size: 34px; color:#111; letter-spacing:-1px; }
+.phone-status { font-size: 11px; color: #666; margin-top: 4px; }
+.phone-btn {
+  width: 100%; padding: 12px; border-radius: 10px;
+  font-family:'Syne',sans-serif; font-weight:700; font-size:13px;
+  border: none; cursor: pointer; margin-bottom: 8px;
+}
+.phone-btn-start { background: #1a5c2a; color: #fff; }
+.phone-btn-rast { background: #fff8e1; color: #7a5d00; border: 1px solid #ffd54f; }
+.phone-btn-stop { background: #fdecea; color: #c0392b; border: 1px solid #f5c6c3; }
+.phone-notif {
+  background: #fff8e1; border: 1px solid #ffd54f; border-radius: 10px;
+  padding: 10px 12px; font-size: 10px; margin-bottom: 8px;
+}
+.phone-notif-title { font-weight: 700; margin-bottom: 2px; }
+.phone-notif-body { color: #7a5d00; }
+
+@keyframes floatIn { from{opacity:0;transform:translateY(-40%) translateX(40px)} to{opacity:1;transform:translateY(-50%) translateX(0)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── LOGOS / BRANSCHER ── */
+.brands {
+  padding: 60px 40px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.brands-label {
+  text-align: center; font-size: 12px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 2px; color: var(--muted);
+  margin-bottom: 28px;
+}
+.brands-list {
+  display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;
+}
+.brand-pill {
+  background: #fff; border: 1px solid var(--border);
+  padding: 10px 22px; border-radius: 40px;
+  font-size: 14px; font-weight: 600; color: #444;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ── HOW IT WORKS ── */
+.section { padding: 100px 40px; max-width: 1100px; margin: 0 auto; }
+.section-label {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent); margin-bottom: 14px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(28px, 4vw, 48px);
+  letter-spacing: -1.5px; color: var(--black);
+  margin-bottom: 16px; line-height: 1.1;
+}
+.section-sub { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.6; }
+
+.steps {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2px; margin-top: 60px;
+  border: 1px solid var(--border); border-radius: 16px; overflow: hidden;
+}
+.step {
+  background: var(--card); padding: 36px 32px;
+  border-right: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.step:last-child { border-right: none; }
+.step:hover { background: #fffaf8; }
+.step-num {
+  font-family: 'Syne', sans-serif; font-weight: 800; font-size: 48px;
+  color: var(--border); letter-spacing: -2px; margin-bottom: 16px;
+  line-height: 1;
+}
+.step-icon { font-size: 28px; margin-bottom: 12px; }
+.step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; margin-bottom: 8px; }
+.step p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+/* ── FEATURES ── */
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px; margin-top: 60px;
+}
+.feature-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.feature-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
+.feature-icon {
+  width: 48px; height: 48px; border-radius: 12px;
+  background: #fff0eb; display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 16px;
+}
+.feature-card h3 { font-family:'Syne',sans-serif; font-weight:700; font-size:17px; margin-bottom:8px; }
+.feature-card p { font-size:13px; color:var(--muted); line-height:1.6; }
+
+/* ── PRICING ── */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px; margin-top: 60px;
+}
+.price-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px;
+  position: relative; transition: transform 0.2s;
+}
+.price-card:hover { transform: translateY(-3px); }
+.price-card.featured {
+  background: var(--black); color: var(--white);
+  border-color: var(--black);
+}
+.price-card.featured .price-muted { color: #888; }
+.price-card.featured .price-feature { color: #ccc; }
+.price-popular {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--accent); color: #fff;
+  padding: 4px 14px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.price-plan { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 12px; }
+.price-card.featured .price-plan { color: #888; }
+.price-amount { font-family:'Syne',sans-serif; font-weight:800; font-size:42px; letter-spacing:-1px; margin-bottom:4px; }
+.price-unit { font-size:13px; color:var(--muted); margin-bottom:20px; }
+.price-divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+.price-card.featured .price-divider { border-color:#333; }
+.price-features { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
+.price-feature { font-size:13px; display:flex; gap:8px; align-items:flex-start; }
+.price-feature::before { content:"✓"; font-weight:700; color:var(--accent); flex-shrink:0; }
+.price-card.featured .price-feature::before { color: var(--accent2); }
+.price-btn {
+  display:block; width:100%; padding:13px;
+  border-radius:10px; text-align:center;
+  font-family:'Syne',sans-serif; font-weight:700; font-size:14px;
+  text-decoration:none; border:none; cursor:pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.price-btn:hover { opacity:0.85; transform:translateY(-1px); }
+.price-btn-dark { background:var(--black); color:#fff; }
+.price-btn-accent { background:var(--accent); color:#fff; box-shadow:0 4px 16px rgba(255,92,43,0.3); }
+.price-btn-outline { background:transparent; color:#fff; border:2px solid #444; }
+
+/* ── CONTACT ── */
+.contact-section {
+  background: var(--black); color: var(--white);
+  padding: 100px 40px;
+}
+.contact-inner { max-width: 640px; margin: 0 auto; }
+.contact-section .section-label { color: var(--accent2); }
+.contact-section .section-title { color: var(--white); }
+.contact-section .section-sub { color: #999; }
+
+.contact-form { margin-top: 48px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.form-group { display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+label { font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; color:#888; }
+input, select, textarea {
+  background: #1a1a1a; border: 1px solid #333;
+  border-radius: 10px; padding: 14px 16px;
+  color: var(--white); font-family:'DM Sans',sans-serif; font-size:15px;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--accent);
+}
+select option { background: #111; }
+textarea { min-height: 120px; resize: vertical; }
+.submit-btn {
+  width: 100%; padding: 16px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 10px; cursor: pointer;
+  font-family:'Syne',sans-serif; font-weight:700; font-size:16px;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(255,92,43,0.4);
+  margin-top: 8px;
+}
+.submit-btn:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(255,92,43,0.5); }
+.submit-btn:disabled { opacity:0.6; transform:none; cursor:not-allowed; }
+.form-success {
+  display:none; text-align:center; padding:40px 20px;
+  background:#111; border-radius:16px; border:1px solid #333;
+}
+.form-success h3 { font-family:'Syne',sans-serif; font-size:24px; font-weight:800; margin-bottom:8px; }
+.form-success p { color:#888; }
+
+/* ── FOOTER ── */
+footer {
+  background: #080808; color: #555;
+  padding: 40px; text-align: center;
+  font-size: 13px;
+}
+footer a { color: #555; text-decoration: none; }
+footer a:hover { color: #fff; }
+.footer-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:20px; color:#fff; margin-bottom:12px; }
+.footer-logo span { color: var(--accent); }
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  nav { padding:16px 20px; }
+  .nav-links { display:none; }
+  .hero { padding:100px 20px 60px; }
+  .section { padding:60px 20px; }
+  .form-row { grid-template-columns:1fr; }
+  .brands { padding:40px 20px; }
+  .contact-section { padding:60px 20px; }
+}
+
+/* ── ANIMATIONS ON SCROLL ── */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">Team<span>Time</span></a>
+  <div class="nav-links">
+    <a href="#hur">Hur det fungerar</a>
+    <a href="#funktioner">Funktioner</a>
+    <a href="#pris">Priser</a>
+    <a href="#kontakt" class="nav-cta">Kom igång gratis</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Ny — nu i beta
+    </div>
+    <h1>
+      <span class="block">Sluta med</span>
+      <span class="block accent">papperslappar.</span>
+      <span class="block">På riktigt.</span>
+    </h1>
+    <p class="hero-sub">
+      TeamTime är tidrapportering som faktiskt fungerar — för åkerier, restauranger, byggbolag och alla som har personal på språng.
+    </p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn-primary">3 månader gratis →</a>
+      <a href="#hur" class="btn-secondary">Se hur det fungerar</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">3 sek</div>
+        <div class="stat-label">Att stämpla in</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">0 kr</div>
+        <div class="stat-label">Bindningstid</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">EU-servrar / GDPR</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="hero-visual">
+    <div class="phone-mock">
+      <div class="phone-screen">
+        <div class="phone-header">
+          <div class="phone-logo">Team<span>Time</span></div>
+        </div>
+        <div class="phone-notif">
+          <div class="phone-notif-title">📋 Nytt schema</div>
+          <div class="phone-notif-body">Idag kl. 05:00 · Karlsson Transport</div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-card-label">Aktivt pass</div>
+          <div class="phone-clock" id="demoClock">02:34:17</div>
+          <div class="phone-status">🟢 Anders jobbar nu</div>
+        </div>
+        <button class="phone-btn phone-btn-start">▶ Start</button>
+        <button class="phone-btn phone-btn-rast">⏸ Rast</button>
+        <button class="phone-btn phone-btn-stop">⏹ Stop</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANDS -->
+<div class="brands">
+  <div class="brands-label">Passar alla branscher</div>
+  <div class="brands-list">
+    <div class="brand-pill">🚛 Åkeri & Transport</div>
+    <div class="brand-pill">🏗️ Bygg & Anläggning</div>
+    <div class="brand-pill">🍽️ Restaurang & Café</div>
+    <div class="brand-pill">🏭 Industri & Lager</div>
+    <div class="brand-pill">🧹 Städ & Service</div>
+    <div class="brand-pill">🔧 VVS & El</div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div id="hur">
+  <div class="section">
+    <div class="section-label">Hur det fungerar</div>
+    <div class="section-title">Enkelt för alla.<br>Kraftfullt för dig.</div>
+    <p class="section-sub">Inga krångliga installationer. Fungerar direkt i mobilens webbläsare — ingen app att ladda ner.</p>
+    <div class="steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-icon">📲</div>
+        <h3>Chauffören loggar in</h3>
+        <p>Med PIN-kod eller Face ID. Ingen app att ladda ner — öppnas direkt i mobilen.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-icon">▶️</div>
+        <h3>Start · Rast · Stop</h3>
+        <p>Tre knappar. Klart på 3 sekunder. Schema och kund fylls i automatiskt.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-icon">📋</div>
+        <h3>Schema med notis</h3>
+        <p>Trafikledaren skickar schema direkt till chauffören — som en push-notis.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-icon">📄</div>
+        <h3>PDF automatiskt</h3>
+        <p>Löneunderlag och faktura genereras med ett klick. Revisorn har sin egen inloggning.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div id="funktioner" style="background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+  <div class="section">
+    <div class="section-label">Funktioner</div>
+    <div class="section-title">Allt du behöver.<br>Inget du inte behöver.</div>
+    <div class="features-grid reveal">
+
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>PIN & Face ID</h3>
+        <p>Chauffören loggar in med PIN eller ansiktsigenkänning. Systemet minns vem som senast loggade in.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📅</div>
+        <h3>Schemaläggning</h3>
+        <p>Skicka schema till en eller alla chauffören på en gång. De får en notis direkt och bekräftar sitt pass.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🟢</div>
+        <h3>Live-vy för trafikledare</h3>
+        <p>Se vem som jobbar just nu, hur länge de har jobbat och vilken kund — i realtid.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Revisor-inloggning</h3>
+        <p>Revisorn har en egen inloggning och ser bara det hen behöver — löneunderlag och faktura som PDF.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📄</div>
+        <h3>Automatiska PDF:er</h3>
+        <p>Löneunderlag och faktura underlag genereras automatiskt. Inga manuella beräkningar.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🏢</div>
+        <h3>Multi-kund</h3>
+        <p>Jobbar du åt flera kunder? Chauffören väljer kund vid incheckning. Fakturan sköter sig själv.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>GDPR & EU-servrar</h3>
+        <p>All data lagras på EU-servrar (Irland). GDPR-kompliant. Avtal skickas vid registrering.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">✅</div>
+        <h3>Bekräfta schema</h3>
+        <p>Chauffören bekräftar sitt schema — du ser direkt vem som sett och godkänt sitt pass.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Fungerar i mobilen</h3>
+        <p>Ingen app att ladda ner. Öppnas direkt i Safari eller Chrome. Fungerar på alla telefoner.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRICING -->
+<div id="pris">
+  <div class="section">
+    <div class="section-label">Priser</div>
+    <div class="section-title">Transparent prissättning.<br>Inga dolda avgifter.</div>
+    <p class="section-sub">Starta gratis i 3 månader. Ingen bindningstid. Avsluta när du vill.</p>
+    <div class="pricing-grid reveal">
+
+      <div class="price-card">
+        <div class="price-plan">Starter</div>
+        <div class="price-amount">499<span style="font-size:18px;font-weight:400">kr</span></div>
+        <div class="price-unit">/månad · ex. moms</div>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li class="price-feature">Upp till 5 anställda</li>
+          <li class="price-feature">Tidrapportering</li>
+          <li class="price-feature">Schema & notiser</li>
+          <li class="price-feature">PDF-export</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-dark">Kom igång gratis</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-popular">Mest populär</div>
+        <div class="price-plan">Growth</div>
+        <div class="price-amount">999<span style="font-size:18px;font-weight:400">kr</span></div>
+        <div class="price-unit price-muted">/månad · ex. moms</div>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li class="price-feature">Upp till 20 anställda</li>
+          <li class="price-feature">Allt i Starter</li>
+          <li class="price-feature">Trafikledare-vy live</li>
+          <li class="price-feature">Revisor-inloggning</li>
+          <li class="price-feature">Multi-kund faktura</li>
+          <li class="price-feature">Bekräftelse av schema</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-accent">Kom igång gratis</a>
+      </div>
+
+      <div class="price-card">
+        <div class="price-plan">Pro</div>
+        <div class="price-amount">1 799<span style="font-size:18px;font-weight:400">kr</span></div>
+        <div class="price-unit">/månad · ex. moms</div>
+        <hr class="price-divider">
+        <ul class="price-features">
+          <li class="price-feature">Obegränsat antal anställda</li>
+          <li class="price-feature">Allt i Growth</li>
+          <li class="price-feature">OB-tillägg automatiskt</li>
+          <li class="price-feature">API-integration</li>
+          <li class="price-feature">Prioriterad support</li>
+        </ul>
+        <a href="#kontakt" class="price-btn price-btn-dark">Kom igång gratis</a>
+      </div>
+
+    </div>
+    <p style="text-align:center;margin-top:24px;color:var(--muted);font-size:13px">
+      Alla paket inkluderar 3 månader gratis. Ingen bindningstid. Avsluta när du vill.
+    </p>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="kontakt" class="contact-section">
+  <div class="contact-inner">
+    <div class="section-label">Kom igång</div>
+    <div class="section-title" style="color:#fff">Intresserad?<br>Hör av dig.</div>
+    <p class="section-sub">Fyll i formuläret så återkommer vi inom 24 timmar med ett demo-konto och mer information.</p>
+
+    <div class="contact-form">
+      <div id="formContainer">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Namn *</label>
+            <input type="text" id="fname" placeholder="Anders Lindqvist" required>
+          </div>
+          <div class="form-group">
+            <label>Företag *</label>
+            <input type="text" id="fcompany" placeholder="Lindqvist Transport AB" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>E-post *</label>
+            <input type="email" id="femail" placeholder="anders@lindqvisttransport.se" required>
+          </div>
+          <div class="form-group">
+            <label>Telefon</label>
+            <input type="tel" id="fphone" placeholder="070-123 45 67">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Bransch *</label>
+          <select id="fbransch">
+            <option value="">Välj bransch...</option>
+            <option>Åkeri & Transport</option>
+            <option>Bygg & Anläggning</option>
+            <option>Restaurang & Café</option>
+            <option>Industri & Lager</option>
+            <option>Städ & Service</option>
+            <option>VVS & El</option>
+            <option>Annat</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Antal anställda</label>
+          <select id="fsize">
+            <option value="">Välj...</option>
+            <option>1–5</option>
+            <option>6–15</option>
+            <option>16–30</option>
+            <option>30+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Meddelande (valfritt)</label>
+          <textarea id="fmsg" placeholder="Berätta gärna om er verksamhet och vad ni söker..."></textarea>
+        </div>
+        <button class="submit-btn" id="submitBtn" onclick="submitForm()">
+          Skicka — 3 månader gratis →
+        </button>
+      </div>
+
+      <div class="form-success" id="formSuccess">
+        <div style="font-size:48px;margin-bottom:16px">🎉</div>
+        <h3>Tack! Vi hör av oss snart.</h3>
+        <p style="margin-top:8px">Vi återkommer inom 24 timmar med ditt demo-konto och mer info.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Team<span>Time</span></div>
+  <p style="margin-bottom:8px">Enkel tidrapportering för alla branscher</p>
+  <p>Developed by <a href="#">BudSupport 365 AB</a> · Norsborg, Sverige · 
+     <a href="#">Integritetspolicy</a> · 
+     <a href="#">Villkor</a> ·
+     <a href="mailto:info@teamtime.se">info@teamtime.se</a>
+  </p>
+</footer>
+
+<script>
+// Demo clock
+let sec = 9257;
+setInterval(()=>{
+  sec++;
+  const h = String(Math.floor(sec/3600)).padStart(2,'0');
+  const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  const el = document.getElementById('demoClock');
+  if(el) el.textContent = `${h}:${m}:${s}`;
+}, 1000);
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Form submit
+function submitForm(){
+  const name = document.getElementById('fname').value.trim();
+  const company = document.getElementById('fcompany').value.trim();
+  const email = document.getElementById('femail').value.trim();
+  const bransch = document.getElementById('fbransch').value;
+  if(!name||!company||!email||!bransch){
+    alert('Fyll i alla obligatoriska fält (*)');
+    return;
+  }
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Skickar...';
+  // Simulate send (replace with actual email/API)
+  setTimeout(()=>{
+    document.getElementById('formContainer').style.display='none';
+    document.getElementById('formSuccess').style.display='block';
+  }, 1200);
+}
+</script>
+</body>
+</html>
